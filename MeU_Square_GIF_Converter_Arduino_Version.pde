@@ -55,6 +55,14 @@ String Status = " ";
 //variable to access ControlP5 class
 ControlP5 cp5;
 
+//****************************
+//Change GIF dimensions here:
+
+final int HEIGHT = 16;
+final int WIDTH = 16;
+//****************************
+
+
 void setup() {
  
   //set up the screen size and layout the buttons
@@ -247,7 +255,7 @@ void WriteHeader() {
   
   output.println("#define PIN 6");
   
-  output.println("Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(16, 16, PIN, NEO_MATRIX_TOP + NEO_MATRIX_LEFT + NEO_MATRIX_COLUMNS + NEO_MATRIX_ZIGZAG, NEO_GRB + NEO_KHZ800);");
+  output.println("Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix("+WIDTH+","+HEIGHT+", PIN, NEO_MATRIX_TOP + NEO_MATRIX_LEFT + NEO_MATRIX_COLUMNS + NEO_MATRIX_ZIGZAG, NEO_GRB + NEO_KHZ800);");
   
 
 
@@ -260,9 +268,9 @@ void WriteLoopFile(int NumberOfFrames, String VarName) {
     if (i == 0) output.println("  if (FrameNumber == " + i + ") {");
     else output.println("   else if (FrameNumber == " + i + ") {");
     
-    output.println("      for (byte y = 0; y < 16; y++) {");
-    output.println("        for (byte x = 0; x < 16; x++) {");
-    output.println("          byte loc = x + y*16;");
+    output.println("      for (byte y = 0; y < "+HEIGHT+"; y++) {");
+    output.println("        for (byte x = 0; x < "+WIDTH+"; x++) {");
+    output.println("          byte loc = x + y*"+WIDTH+";");
     output.println("          matrix.drawPixel(x, y, drawRGB24toRGB565(pgm_read_byte(&("+ VarName + "RedFrame" + i + "[loc])), pgm_read_byte(&(" + VarName + "GreenFrame" + i + "[loc])), pgm_read_byte(&(" + VarName + "BlueFrame" + i + "[loc]))));"); 
     output.println("        }");
     output.println("      }");
@@ -281,7 +289,7 @@ void WriteLoopFile(int NumberOfFrames, String VarName) {
 void WriteFile(PImage img, int FrameNumber, String VarName) {
   //img = loadImage(ImageFileName);
   img.loadPixels(); 
-  output.print("prog_uchar " + VarName + "RedFrame" + FrameNumber + "[16*16] PROGMEM = ");
+  output.print("prog_uchar " + VarName + "RedFrame" + FrameNumber + "["+WIDTH+"*"+HEIGHT+"] PROGMEM = ");
   output.print("{");
   for (int y = 0; y < height; y++) {
     for (int x = 0; x < width; x++) {
@@ -296,7 +304,7 @@ void WriteFile(PImage img, int FrameNumber, String VarName) {
   }
   
   output.println("};");
-  output.print("prog_uchar " + VarName + "GreenFrame" + FrameNumber + "[16*16] PROGMEM = ");
+  output.print("prog_uchar " + VarName + "GreenFrame" + FrameNumber + "["+WIDTH+"*"+HEIGHT+"] PROGMEM = ");
   output.print("{");
   for (int y = 0; y < height; y++) {
     for (int x = 0; x < width; x++) {
@@ -312,7 +320,7 @@ void WriteFile(PImage img, int FrameNumber, String VarName) {
   
   output.println("};");
   
-  output.print("prog_uchar " + VarName + "BlueFrame" + FrameNumber + "[16*16] PROGMEM = ");
+  output.print("prog_uchar " + VarName + "BlueFrame" + FrameNumber + "["+WIDTH+"*"+HEIGHT+"] PROGMEM = ");
   output.print("{");
   for (int y = 0; y < height; y++) {
     for (int x = 0; x < width; x++) {
